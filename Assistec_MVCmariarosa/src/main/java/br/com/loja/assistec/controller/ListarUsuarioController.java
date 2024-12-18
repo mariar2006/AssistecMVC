@@ -2,6 +2,8 @@ package br.com.loja.assistec.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -29,6 +31,14 @@ public class ListarUsuarioController {
 		listarView.addListarUsuariosListener(new ListarUsuariosListener());
 		listarView.addWindowListener(new JanelaAberturaListener());
 		listarView.addTabelaMouseListener(new TabelaMouseClickListener());
+		listarView.addBuscarKeyListener(new BuscaKeyListener());
+	}
+	
+	public class BuscaKeyListener extends KeyAdapter {
+		@Override
+		public void keyPressed(KeyEvent e) {
+			listarView.filtrarRegistros();
+		}
 	}
 
 	public void carregarUsuarios() throws SQLException {
@@ -52,12 +62,10 @@ public class ListarUsuarioController {
 		return dao.selecionarUsuario(iduser);
 	}
 	
-	//Classe que trata o evento do clique na tabela
 	private class TabelaMouseClickListener extends MouseAdapter{
 		
 		public void mouseClicked(MouseEvent e) {
 			if (e.getButton() == MouseEvent.BUTTON1) {
-				//Selecionar o usuario
 				int linha = listarView.getLinhaSelecionada();
 				Long iduser = (Long) listarView.getValorLinhaColuna(linha, 0);
 				try {
@@ -71,7 +79,6 @@ public class ListarUsuarioController {
 		}
 	}
 	
-	//Classe que trata os eventos de botao
 	private class ListarUsuariosListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
